@@ -7,15 +7,23 @@ import penguins from "../assets/penguins.json";
 
 <Layout>
   <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
-  <PlotFigure
-    options={{
-      marks: [
-        Plot.dot(penguins, {
-          x: "culmen_length_mm",
-          y: "culmen_depth_mm",
-          stroke: "species",
-        }),
-      ],
-    }}
-  />
+  <div class="[&_h2]:text-2xl">
+    <PlotFigure
+      options={{
+        // Opt. Construit une figure/figcaption
+        title: "For charts, an informative title",
+        subtitle: "Subtitle to follow with additional context",
+        caption: "Figure 1. A chart with a title, subtitle, and caption.",
+        // sur l'élément SVG lui-même
+        ariaLabel: "label sur le svg lui même",
+        marks: [
+          Plot.dot(penguins, {
+            x: "culmen_length_mm",
+            y: "culmen_depth_mm",
+            stroke: "species",
+          }),
+        ],
+      }}
+    />
+  </div>
 </Layout>
