@@ -7,16 +7,21 @@ import Layout from "../layouts/Layout.astro";
   <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
   <ul class="flex gap-2">
     <li>
-      <a class="text-red-600 border-2 rounded-full p-1" href="#Adelie">Adelie</a
+      <a
+        class="menu-item [.active]:bg-red-200 text-red-600 border-2 rounded-full p-1"
+        href="#Adelie">Adelie</a
       >
     </li>
     <li>
-      <a class="text-red-600 border-2 rounded-full p-1" href="#Gentoo">Gentoo</a
+      <a
+        class="menu-item [.active]:bg-red-200 text-red-600 border-2 rounded-full p-1"
+        href="#Gentoo">Gentoo</a
       >
     </li>
     <li>
-      <a class="text-red-600 border-2 rounded-full p-1" href="#Chinstrap"
-        >Chinstrap</a
+      <a
+        class="menu-item [.active]:bg-red-200 text-red-600 border-2 rounded-full p-1"
+        href="#Chinstrap">Chinstrap</a
       >
     </li>
   </ul>
@@ -25,24 +30,47 @@ import Layout from "../layouts/Layout.astro";
   >
     <div
       id="Adelie"
-      class="min-w-full snap-center bg-white rounded-lg shadow p-4"
+      class="item min-w-full snap-center bg-white rounded-lg shadow p-4"
     >
       <h2>Adelie</h2>
       <PlotPenguins species="Adelie" />
     </div>
     <div
       id="Gentoo"
-      class="min-w-full snap-center bg-white rounded-lg shadow p-4"
+      class="item min-w-full snap-center bg-white rounded-lg shadow p-4"
     >
       <h2>Gentoo</h2>
       <PlotPenguins species="Gentoo" />
     </div>
     <div
       id="Chinstrap"
-      class="min-w-full snap-center bg-white rounded-lg shadow p-4"
+      class="item min-w-full snap-center bg-white rounded-lg shadow p-4"
     >
       <h2>Chinstrap</h2>
       <PlotPenguins species="Chinstrap" />
     </div>
   </div>
+  <script>
+    const menuItems = document.querySelectorAll(".menu-item");
+    const items = document.querySelectorAll(".item");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute("id");
+          const menuItem = document.querySelector(`.menu-item[href="#${id}"]`);
+          if (entry.isIntersecting) {
+            menuItem?.classList.add("active");
+          } else {
+            menuItem?.classList.remove("active");
+          }
+        });
+      },
+      { threshold: 0.5 },
+    );
+
+    items.forEach((item) => {
+      observer.observe(item);
+    });
+  </script>
 </Layout>
