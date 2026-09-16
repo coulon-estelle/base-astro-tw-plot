@@ -1,20 +1,26 @@
 <script>
-	const menuItems = document.querySelectorAll<HTMLAnchorElement>(".menu-item");
+	const menu = document.querySelector<HTMLSelectElement>("#species-anchor");
 	const items = document.querySelectorAll<HTMLElement>(".item");
 
-	console.log("menuItems", menuItems);
-	console.log("items", items);
+	if (menu) {
+		const currentHash = location.hash.slice(1);
+		if (currentHash && document.getElementById(currentHash)) {
+			menu.value = currentHash;
+		}
+
+		menu.addEventListener("change", (event) => {
+			const value = (event.target as HTMLSelectElement).value;
+			location.hash = value;
+		});
+	}
 
 	const observer = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
 				const id = entry.target.getAttribute("id");
-				const menuItem = document.querySelector(`.menu-item[href="#${id}"]`);
 
-				if (entry.isIntersecting) {
-					menuItem?.classList.add("active");
-				} else {
-					menuItem?.classList.remove("active");
+				if (entry.isIntersecting && id && menu) {
+					menu.value = id;
 				}
 			});
 		},

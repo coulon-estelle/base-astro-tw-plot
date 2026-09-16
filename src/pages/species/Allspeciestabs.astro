@@ -1,0 +1,36 @@
+---
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "accessible-astro-components";
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const penguinsAdelie = penguins.filter(({ species }) => species === "Adelie");
+const penguinsChinstrap = penguins.filter(({ species }) => species === "Chinstrap");
+const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
+
+---
+
+
+<Layout title="Vue d'ensemble | Penguin Field Notes">
+	<main class="page-shell">
+		<div class="page-heading">
+			<h1 class="eyebrow">3 espèces de pinguins</h1>
+		</div>
+		<Tabs class="!mt-10">
+			<TabsList class="!flex !flex-wrap !gap-3 !border-0" aria-label="Graphiques par espèce">
+				<TabsTab id="tab-adelie" controls="panel-adelie" selected class="!rounded-full !border-0 !bg-rose-100 !px-5 !py-3 !font-semibold !text-rose-500 aria-selected:!bg-rose-200 aria-selected:!text-rose-700">Adelie</TabsTab>
+				<TabsTab id="tab-chinstrap" controls="panel-chinstrap" class="!rounded-full !border-0 !bg-violet-100 !px-5 !py-3 !font-semibold !text-violet-500 aria-selected:!bg-violet-200 aria-selected:!text-violet-700">Chinstrap</TabsTab>
+				<TabsTab id="tab-gentoo" controls="panel-gentoo" class="!rounded-full !border-0 !bg-cyan-100 !px-5 !py-3 !font-semibold !text-cyan-500 aria-selected:!bg-cyan-200 aria-selected:!text-cyan-700">Gentoo</TabsTab>
+			</TabsList>
+			<TabsPanel id="panel-adelie" labelledby="tab-adelie" selected class="!mt-6 !rounded-2xl !border-0 !bg-transparent !p-0">
+				<GraphicSpecies id="adelie" title="Adelie" data={penguinsAdelie} color="#e11d48" panelClass="border-rose-200 bg-rose-50" titleClass="text-rose-800" />
+			</TabsPanel>
+			<TabsPanel id="panel-chinstrap" labelledby="tab-chinstrap" class="!mt-6 !rounded-2xl !border-0 !bg-transparent !p-0">
+				<GraphicSpecies id="chinstrap" title="Chinstrap" data={penguinsChinstrap} color="#7c3aed" panelClass="border-violet-200 bg-violet-50" titleClass="text-violet-800" />
+			</TabsPanel>
+			<TabsPanel id="panel-gentoo" labelledby="tab-gentoo" class="!mt-6 !rounded-2xl !border-0 !bg-transparent !p-0">
+				<GraphicSpecies id="gentoo" title="Gentoo" data={penguinsGentoo} color="#0891b2" panelClass="border-cyan-200 bg-cyan-50" titleClass="text-cyan-800" />
+			</TabsPanel>
+		</Tabs>
+	</main>
+</Layout>

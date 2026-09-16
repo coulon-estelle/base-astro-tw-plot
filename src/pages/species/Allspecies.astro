@@ -16,11 +16,14 @@ const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
 		<div class="page-heading">
 			<h1 class="eyebrow">Atlas comparatif · 03 espèces</h1>
 		</div>
-		<nav class="species-pills" aria-label="Accès rapide aux graphiques">
-			<a href="#adelie" class="menu-item active pill pill-rose [&.active]:bg-red-200" aria-current="true">Adelie <span>01</span></a>
-			<a href="#chinstrap" class="menu-item pill pill-violet [&.active]:bg-red-200">Chinstrap <span>02</span></a>
-			<a href="#gentoo" class="menu-item pill pill-cyan [&.active]:bg-red-200">Gentoo <span>03</span></a>
-		</nav>
+		<label class="species-slider-menu">
+			<span class="sr-only">Choisir un graphique</span>
+			<select id="species-anchor" class="species-anchor-select" aria-label="Accès rapide aux graphiques">
+				<option value="adelie">Adelie</option>
+				<option value="chinstrap">Chinstrap</option>
+				<option value="gentoo">Gentoo</option>
+			</select>
+		</label>
 		<section id="species-slider" class="species-slider" aria-label="Graphiques par espèce">
 				<GraphicSpecies id="adelie" title="Adelie" data={penguinsAdelie} color="#e11d48" panelClass="border-rose-200 bg-rose-50" titleClass="text-rose-800" />
 				<GraphicSpecies id="chinstrap" title="Chinstrap" data={penguinsChinstrap} color="#7c3aed" panelClass="border-violet-200 bg-violet-50" titleClass="text-violet-800" />

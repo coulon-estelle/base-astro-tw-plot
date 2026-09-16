@@ -209,6 +209,24 @@ a {
 	margin: 2.5rem 0 1.25rem;
 }
 
+.species-slider-menu {
+	display: block;
+	max-width: 16rem;
+	margin: 2rem 0 1.75rem;
+}
+
+.species-anchor-select {
+	width: 100%;
+	padding: 0.75rem 2.25rem 0.75rem 1rem;
+	color: var(--ink);
+	background: rgba(255, 255, 255, 0.78);
+	border: 1px solid var(--line);
+	border-radius: 0.8rem;
+	font-size: 0.82rem;
+	font-weight: 700;
+	cursor: pointer;
+}
+
 .pill {
 	display: inline-flex;
 	align-items: center;
@@ -238,16 +256,18 @@ a {
 
 .species-slider {
 	display: flex;
-	gap: 1rem;
+	gap: 1.5rem;
 	overflow-x: auto;
-	padding: 0.25rem 0 1.5rem;
+	padding: 0.25rem 0.25rem 1.5rem;
 	scroll-behavior: smooth;
+	scroll-padding-inline: 0.25rem;
 	scroll-snap-type: x mandatory;
 	scrollbar-color: #d4c3ee transparent;
 }
 
 .species-slider > .item {
-	min-width: 100%;
+	box-sizing: border-box;
+	flex: 0 0 calc(100% - 1.5rem);
 	scroll-snap-align: center;
 }
 
