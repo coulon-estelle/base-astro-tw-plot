@@ -1,0 +1,33 @@
+---
+const currentPath = Astro.url.pathname;
+const currentSpecies = currentPath.replace(/\/$/, "").split("/").pop();
+const species = [
+  { value: "Allspecies", label: "Vue d'ensemble" },
+  { value: "Adelie", label: "Adelie" },
+  { value: "Chinstrap", label: "Chinstrap" },
+  { value: "Gentoo", label: "Gentoo" },
+];
+---
+
+<nav class="site-nav" aria-label="Navigation principale">
+  <a class="brand" href="/" aria-label="Penguin, accueil">
+    <strong>Penguin</strong>
+  </a>
+  <label class="species-menu">
+    <span class="sr-only">Choisir une espèce</span>
+    <select id="species" class="species-select">
+      {species.map((item) => (
+        <option value={item.value} selected={currentSpecies === item.value}>
+          {item.label}
+        </option>
+      ))}
+    </select>
+  </label>
+</nav>
+
+<script>
+  document.querySelector("#species")?.addEventListener("change", (event) => {
+    const value = (event.target as HTMLSelectElement).value;
+    location.pathname = "/species/" + value + "/";
+  });
+</script>

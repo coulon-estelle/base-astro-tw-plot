@@ -1,0 +1,36 @@
+---
+import PlotFigure from "./PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+
+interface Props {
+	id: string;
+	title: string;
+	data: Array<{
+		culmen_length_mm: number | null;
+		culmen_depth_mm: number | null;
+	}>;
+	color: string;
+	panelClass: string;
+	titleClass: string;
+}
+
+const { id, title, data, color, panelClass, titleClass } = Astro.props;
+
+const options = {
+	x: { label: "Longueur du culmen (mm)" },
+	y: { label: "Profondeur du culmen (mm)" },
+	marks: [
+		Plot.dot(data, {
+			x: "culmen_length_mm",
+			y: "culmen_depth_mm",
+			fill: color,
+			r: 4,
+		}),
+	],
+};
+---
+
+<div id={id} class={`item min-w-full shrink-0 snap-center scroll-mt-6 rounded-lg border p-4 shadow-sm ${panelClass}`}>
+	<h2 class={`mb-3 text-xl font-semibold ${titleClass}`}>{title}</h2>
+	<PlotFigure options={options} />
+</div>

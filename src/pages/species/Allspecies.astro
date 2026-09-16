@@ -1,0 +1,32 @@
+---
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import ActiveMenu from "../../components/ActiveMenu.astro";
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const penguinsAdelie = penguins.filter(({ species }) => species === "Adelie");
+const penguinsChinstrap = penguins.filter(({ species }) => species === "Chinstrap");
+const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
+
+---
+
+
+<Layout title="Vue d'ensemble | Penguin Field Notes">
+	<main class="page-shell">
+		<div class="page-heading">
+			<h1 class="eyebrow">Atlas comparatif · 03 espèces</h1>
+		</div>
+		<nav class="species-pills" aria-label="Accès rapide aux graphiques">
+			<a href="#adelie" class="menu-item active pill pill-rose [&.active]:bg-red-200" aria-current="true">Adelie <span>01</span></a>
+			<a href="#chinstrap" class="menu-item pill pill-violet [&.active]:bg-red-200">Chinstrap <span>02</span></a>
+			<a href="#gentoo" class="menu-item pill pill-cyan [&.active]:bg-red-200">Gentoo <span>03</span></a>
+		</nav>
+		<section id="species-slider" class="species-slider" aria-label="Graphiques par espèce">
+				<GraphicSpecies id="adelie" title="Adelie" data={penguinsAdelie} color="#e11d48" panelClass="border-rose-200 bg-rose-50" titleClass="text-rose-800" />
+				<GraphicSpecies id="chinstrap" title="Chinstrap" data={penguinsChinstrap} color="#7c3aed" panelClass="border-violet-200 bg-violet-50" titleClass="text-violet-800" />
+				<GraphicSpecies id="gentoo" title="Gentoo" data={penguinsGentoo} color="#0891b2" panelClass="border-cyan-200 bg-cyan-50" titleClass="text-cyan-800" />
+		</section>
+	</main>
+</Layout>
+
+<ActiveMenu />

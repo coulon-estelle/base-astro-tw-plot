@@ -5,17 +5,31 @@ import * as Plot from "@observablehq/plot";
 import penguins from "../assets/penguins.json";
 ---
 
-<Layout>
-  <h1 class="text-2xl">Test Astro et Plot (Observablehq)</h1>
-  <PlotFigure
-    options={{
-      marks: [
-        Plot.dot(penguins, {
-          x: "culmen_length_mm",
-          y: "culmen_depth_mm",
-          stroke: "species",
-        }),
-      ],
-    }}
-  />
+<Layout title="Accueil | Penguin Field Notes">
+  <main class="page-shell">
+    <section class="species-hero">
+      <div>
+        <h1 class="home-title">Carnet de terrain · Antarctique</h1>
+      </div>
+      <div class="rounded-2xl border border-white/70 bg-white/60 p-3 shadow-xl shadow-violet-100">
+        <PlotFigure
+          options={{
+            marginLeft: 58,
+            marginBottom: 48,
+            x: { label: "Longueur du culmen (mm)" },
+            y: { label: "Profondeur du culmen (mm)" },
+            marks: [
+              Plot.dot(penguins, {
+                x: "culmen_length_mm",
+                y: "culmen_depth_mm",
+                fill: "species",
+                r: 4,
+                fillOpacity: 0.72,
+              }),
+            ],
+          }}
+        />
+      </div>
+    </section>
+  </main>
 </Layout>

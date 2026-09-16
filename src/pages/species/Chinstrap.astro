@@ -1,0 +1,19 @@
+---
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const penguinsChinstrap = penguins.filter(({ species }) => species === "Chinstrap");
+---
+
+<Layout title="Chinstrap | Penguin Field Notes">
+	<main class="page-shell">
+		<section class="page-heading">
+			<p class="eyebrow">Fiche espèce · 02</p>
+			<h1>Chinstrap <em>penguin.</em></h1>
+		</section>
+		<div class="mt-10">
+			<GraphicSpecies id="chinstrap" title="Mesures du culmen" data={penguinsChinstrap} color="#7c3aed" panelClass="border-violet-200 bg-violet-50" titleClass="text-violet-800" />
+		</div>
+	</main>
+</Layout>

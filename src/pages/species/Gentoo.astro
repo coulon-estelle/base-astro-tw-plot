@@ -1,0 +1,19 @@
+---
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
+---
+
+<Layout title="Gentoo | Penguin Field Notes">
+	<main class="page-shell">
+		<section class="page-heading">
+			<p class="eyebrow">Fiche espèce · 03</p>
+			<h1>Gentoo <em>penguin.</em></h1>
+		</section>
+		<div class="mt-10">
+			<GraphicSpecies id="gentoo" title="Mesures du culmen" data={penguinsGentoo} color="#0891b2" panelClass="border-cyan-200 bg-cyan-50" titleClass="text-cyan-800" />
+		</div>
+	</main>
+</Layout>

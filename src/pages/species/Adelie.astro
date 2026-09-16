@@ -1,0 +1,19 @@
+---
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import Layout from "../../layouts/Layout.astro";
+import penguins from "../../assets/penguins.json";
+
+const penguinsAdelie = penguins.filter(({ species }) => species === "Adelie");
+---
+
+<Layout title="Adelie | Penguin Field Notes">
+	<main class="page-shell">
+		<section class="page-heading">
+			<p class="eyebrow">Fiche espèce · 01</p>
+			<h1>Adelie <em>penguin.</em></h1>
+		</section>
+		<div class="mt-10">
+			<GraphicSpecies id="adelie" title="Mesures du culmen" data={penguinsAdelie} color="#e11d48" panelClass="border-rose-200 bg-rose-50" titleClass="text-rose-800" />
+		</div>
+	</main>
+</Layout>
