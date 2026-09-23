@@ -2,23 +2,42 @@
 const currentPath = Astro.url.pathname;
 const currentSpecies = currentPath.replace(/\/$/, "").split("/").pop();
 const species = [
+  { value: "", label: "Simple" },
+  { value: "Penguins", label: "Penguins · JSON" },
   { value: "Allspecies", label: "Vue d'ensemble" },
   { value: "Allspeciestabs", label: "Vue d'ensemble avec onglets" },
   { value: "Adelie", label: "Adelie" },
   { value: "Chinstrap", label: "Chinstrap" },
   { value: "Gentoo", label: "Gentoo" },
+  { value: "Penguinsselect", label: "Selection d'espèces" },
+  { value: "Selectislandsex", label: "Selection d'espèces, îles et sexes" },
 ];
+
+const currentPizza = currentPath.replace(/\/$/, "").split("/").pop();
+const pizzas = [{ value: "Pizza", label: "Pizza" }];
 ---
 
 <nav class="site-nav" aria-label="Navigation principale">
   <a class="brand" href="/" aria-label="Penguin, accueil">
     <strong>Penguin</strong>
   </a>
-  <label class="species-menu">
+  <label class="species-menu" >
     <span class="sr-only">Choisir une espèce</span>
-    <select id="species" class="species-select">
+    <select id="species" class="species-select rounded-b-xl border border-violet-200 bg-white px-4 py-3 text-gray-700 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200">
       {species.map((item) => (
-        <option value={item.value} selected={currentSpecies === item.value}>
+        <option value={item.value} selected={currentSpecies === item.value}
+        class={currentSpecies === item.value ? "bg-violet-100 text-violet-700" : ""}>
+          {item.label}
+        </option>
+      ))}
+    </select>
+  </label>
+  <label class="species-menu">
+    <span class="sr-only">Choisir une page pizza</span>
+    <select id="pizza" class="species-select">
+      <option value="" selected={currentPizza !== "Pizza"}>Choisir Pizza</option>
+      {pizzas.map((item) => (
+        <option value={item.value} selected={currentPizza === item.value}>
           {item.label}
         </option>
       ))}
@@ -29,6 +48,11 @@ const species = [
 <script>
   document.querySelector("#species")?.addEventListener("change", (event) => {
     const value = (event.target as HTMLSelectElement).value;
-    location.pathname = "/species/" + value + "/";
+    location.pathname = value ? "/species/" + value + "/" : "/";
+  });
+
+  document.querySelector("#pizza")?.addEventListener("change", (event) => {
+    const value = (event.target as HTMLSelectElement).value;
+    location.pathname = "/pizza/" + value + "/";
   });
 </script>

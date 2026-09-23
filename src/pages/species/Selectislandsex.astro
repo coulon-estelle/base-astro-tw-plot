@@ -1,0 +1,139 @@
+---
+import PlotFigure from "../../components/PlotFigure.astro";
+import Layout from "../../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../../assets/penguins.json";
+---
+
+<Layout title="Penguins | Penguin Field Notes">
+  <main class="page-shell">
+    <section class="species-hero">
+
+      <div>
+        <h1 class="home-title">Penguins · données JSON</h1>
+
+        <!-- SELECT -->
+        <div class="mt-6">
+          <label
+            for="species"
+            class="mb-2 block text-sm font-semibold text-gray-700"
+          >
+            Filtrer par espèce
+          </label>
+
+          <select
+            name="species"
+            id="species-filter"
+            class="w-full max-w-xs cursor-pointer rounded-xl border border-violet-200 bg-white px-4 py-3 text-gray-700 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+          >
+            <option value="">Toutes les espèces</option>
+            <option value="Adelie">Adelie</option>
+            <option value="Chinstrap">Chinstrap</option>
+            <option value="Gentoo">Gentoo</option>
+          </select>
+        </div>
+
+        <div class="mt-4">
+          <label
+            for="island-filter"
+            class="mb-2 block text-sm font-semibold text-gray-700"
+          >
+            Filtrer par île
+          </label>
+
+          <select
+            name="island"
+            id="island-filter"
+            class="w-full max-w-xs cursor-pointer rounded-xl border border-violet-200 bg-white px-4 py-3 text-gray-700 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+          >
+            <option value="">Toutes les îles</option>
+            <option value="Biscoe">Biscoe</option>
+            <option value="Dream">Dream</option>
+            <option value="Torgersen">Torgersen</option>
+          </select>
+        </div>
+
+        <div class="mt-4">
+          <label
+            for="sex-filter"
+            class="mb-2 block text-sm font-semibold text-gray-700"
+          >
+            Filtrer par sexe
+          </label>
+
+          <select
+            name="sex"
+            id="sex-filter"
+            class="w-full max-w-xs cursor-pointer rounded-xl border border-violet-200 bg-white px-4 py-3 text-gray-700 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+          >
+            <option value="">Tous les sexes</option>
+            <option value="MALE">MALE</option>
+            <option value="FEMALE">FEMALE</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+  id="graphique"
+  class="rounded-2xl border border-white/70 bg-white/60 p-3 shadow-xl shadow-violet-100"
+>
+</div>
+
+<script>
+  import * as Plot from "@observablehq/plot";
+  import penguins from "../../assets/penguins.json";
+
+  const selectSpecies =
+    document.querySelector<HTMLSelectElement>("#species-filter");
+  const selectIsland =
+    document.querySelector<HTMLSelectElement>("#island-filter");
+  const selectSex = document.querySelector<HTMLSelectElement>("#sex-filter");
+
+  function renderPlot() {
+    const species = selectSpecies?.value ?? "";
+    const island = selectIsland?.value ?? "";
+    const sex = selectSex?.value ?? "";
+
+    const graphique = document.querySelector("#graphique");
+
+    if (!graphique) return;
+
+    graphique.innerHTML = "";
+
+    const plot = Plot.plot({
+      marginLeft: 58,
+      marginBottom: 48,
+
+      x: {
+        label: "Longueur du culmen (mm)",
+      },
+
+      y: {
+        label: "Profondeur du culmen (mm)",
+      },
+
+      marks: [
+        Plot.dot(penguins, {
+          x: "culmen_length_mm",
+          y: "culmen_depth_mm",
+          stroke: "species",
+          filter: (d) =>
+            (species === "" || d.species === species) &&
+            (island === "" || d.island === island) &&
+            (sex === "" || d.sex === sex),
+        }),
+      ],
+    });
+
+    graphique.append(plot);
+  }
+
+  selectSpecies?.addEventListener("change", renderPlot);
+  selectIsland?.addEventListener("change", renderPlot);
+  selectSex?.addEventListener("change", renderPlot);
+
+  renderPlot();
+</script>
+    </section>
+  </main>
+</Layout>
