@@ -1,0 +1,187 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import populationMain from "../../assets/populationMain.json";
+import departements from "../../assets/departements.geojson.json";
+import PlotFigure from "../../components/PlotFigure.astro";
+
+const listeSexe = [
+  ...new Set(populationMain.map((d) => d.Sexe))
+];
+
+const listeAge = [
+  ...new Set(populationMain.map((d) => d["Âge"]))
+];
+
+const listePeriode = [
+  ...new Set(populationMain.map((d) => d.Période))
+].reverse();
+
+
+const selectedYear = listePeriode[0];
+const selectedSex = listeSexe[0];
+const selectedAge = listeAge[0];
+
+const populationFiltree = populationMain.filter((d) =>
+  d["Période"] === selectedYear &&
+  d["Sexe"] === selectedSex &&
+  d["Âge"] === selectedAge
+);
+
+const populationParDepartement = new Map(
+  populationFiltree.map((d) => [
+    d["Géographie"],
+    Number(d["Valeur"])
+  ])
+);
+
+const departementsAvecPopulation = {
+  ...departements,
+  features: departements.features.map((departement) => ({
+    ...departement,
+    properties: {
+      ...departement.properties,
+      population: populationParDepartement.get(departement.properties.nom)
+    }
+  }))
+};
+
+---
+
+<Layout title="Population française | Penguin">
+  <main class="page-shell">
+    <div class="page-heading">
+      <h1>Population française</h1>
+      <p>Évolution de la population selon les départements.</p>
+    </div>
+
+    <div class="filters">
+        
+<label for="sexe">Sexe</label>
+<select id="sexe">
+  {listeSexe.map((s) => (
+    <option value={s}>{s}</option>
+  ))}
+</select>
+
+<label for="age">Âge</label>
+<select id="age">
+  {listeAge.map((a) => (
+    <option value={a}>{a}</option>
+  ))}
+</select>
+
+      <label for="periode">Année</label>
+      <select id="periode">
+        {listePeriode.map((p, i) => (
+          <option value={p} selected={i === 0}>{p}</option>
+        ))}
+      </select>
+
+      <button id="filtrer">Filtrer</button>
+      
+    </div>
+
+<div id="carte"></div>
+
+  </main>
+</Layout>
+
+<style>
+  .filters {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 0;
+  }
+
+  select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+  }
+
+  #carte {
+    padding: 25px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    overflow-x: auto;
+  }
+</style>
+
+
+<script>
+  import * as Plot from "@observablehq/plot";
+  import populationMain from "../../assets/populationMain.json";
+  import departements from "../../assets/departements.geojson.json";
+
+  const periode = document.querySelector("#periode") as HTMLSelectElement;
+  const sexe = document.querySelector("#sexe") as HTMLSelectElement;
+  const age = document.querySelector("#age") as HTMLSelectElement;
+  const carte = document.querySelector("#carte") as HTMLDivElement;
+
+  function afficherCarte() {
+    const annee = Number(periode.value);
+
+    const donnees = populationMain.filter((d) =>
+      d["Période"] === annee &&
+      d["Sexe"] === sexe.value &&
+      d["Âge"] === age.value
+    );
+
+    const populations = new Map(
+      donnees.map((d) => [
+        d["Géographie"],
+        Number(d["Valeur"])
+      ])
+    );
+
+    const geojson = {
+      ...departements,
+      features: departements.features.map((d) => ({
+        ...d,
+        properties: {
+          ...d.properties,
+          population: populations.get(d.properties.nom)
+        }
+      }))
+    };
+
+    const graphique = Plot.plot({
+      width: 850,
+      height: 650,
+      projection: {
+        type: "mercator",
+        domain: departements
+      },
+      title: "Population par département",
+      subtitle: `${annee} · ${sexe.value} · ${age.value}`,
+      ariaLabel: "Carte de la population française par département",
+      color: {
+        type: "quantize",
+        scheme: "purples",
+        legend: true,
+        label: "Population",
+        unknown: "#eeeeee"
+      },
+      marks: [
+        Plot.geo(geojson, {
+          fill: (d) => d.properties.population ?? null,
+          stroke: "white",
+          strokeWidth: 0.7,
+          tip: true
+        })
+      ]
+    });
+
+    carte.replaceChildren(graphique);
+  }
+
+  periode.addEventListener("change", afficherCarte);
+  sexe.addEventListener("change", afficherCarte);
+  age.addEventListener("change", afficherCarte);
+
+  afficherCarte();
+</script>

@@ -67,6 +67,12 @@ const color = colors[specie ?? ""] ?? "#7c3aed";
       <div class="graph">
         <PlotFigure
           options={{
+            
+title: `Mensurations des manchots ${speciesName}`,
+subtitle: "Comparaison de la longueur et de la profondeur du bec",
+caption: `Chaque point représente un manchot ${speciesName}.`,
+ariaLabel: `Nuage de points représentant les mensurations des manchots ${speciesName}`,
+
             width: 760,
             height: 430,
             marginLeft: 75,
