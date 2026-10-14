@@ -4,9 +4,15 @@ import ActiveMenu from "../../components/ActiveMenu.astro";
 import Layout from "../../layouts/Layout.astro";
 import penguins from "../../assets/penguins.json";
 
-const penguinsAdelie = penguins.filter(({ species }) => species === "Adelie");
-const penguinsChinstrap = penguins.filter(({ species }) => species === "Chinstrap");
-const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
+const speciesList = [...new Set(penguins.map((penguin) => penguin.species))];
+
+const colors = ["#e11d48", "#7c3aed", "#0891b2"];
+const panelClasses = [
+  "border-rose-200 bg-rose-50",
+  "border-violet-200 bg-violet-50",
+  "border-cyan-200 bg-cyan-50"
+];
+const titleClasses = ["text-rose-800", "text-violet-800", "text-cyan-800"];
 
 ---
 
@@ -19,15 +25,24 @@ const penguinsGentoo = penguins.filter(({ species }) => species === "Gentoo");
 		<label class="species-slider-menu">
 			<span class="sr-only">Choisir un graphique</span>
 			<select id="species-anchor" class="species-anchor-select" aria-label="Accès rapide aux graphiques">
-				<option value="adelie">Adelie</option>
-				<option value="chinstrap">Chinstrap</option>
-				<option value="gentoo">Gentoo</option>
+				{speciesList.map((species) => (
+  <option value={species.toLowerCase()}>
+    {species}
+  </option>
+))}
 			</select>
 		</label>
 		<section id="species-slider" class="species-slider" aria-label="Graphiques par espèce">
-				<GraphicSpecies id="adelie" title="Adelie" data={penguinsAdelie} color="#e11d48" panelClass="border-rose-200 bg-rose-50" titleClass="text-rose-800" />
-				<GraphicSpecies id="chinstrap" title="Chinstrap" data={penguinsChinstrap} color="#7c3aed" panelClass="border-violet-200 bg-violet-50" titleClass="text-violet-800" />
-				<GraphicSpecies id="gentoo" title="Gentoo" data={penguinsGentoo} color="#0891b2" panelClass="border-cyan-200 bg-cyan-50" titleClass="text-cyan-800" />
+			{speciesList.map((species, index) => (
+  <GraphicSpecies
+    id={species.toLowerCase()}
+    title={species}
+    data={penguins.filter((penguin) => penguin.species === species)}
+    color={colors[index % colors.length]}
+    panelClass={panelClasses[index % panelClasses.length]}
+    titleClass={titleClasses[index % titleClasses.length]}
+  />
+))}	
 		</section>
 	</main>
 </Layout>

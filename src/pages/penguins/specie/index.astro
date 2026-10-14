@@ -1,0 +1,174 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import penguins from "../../../assets/penguins.json";
+
+const speciesList = [...new Set(penguins.map((penguin) => penguin.species))];
+
+const colors = [
+  { bg: "#fff1f2", accent: "#be123c", border: "#fecdd3" },
+  { bg: "#f5f3ff", accent: "#7c3aed", border: "#ddd6fe" },
+  { bg: "#ecfeff", accent: "#0891b2", border: "#a5f3fc" }
+];
+---
+
+<Layout title="Espèces | Penguin Field Notes">
+  <main class="species-page">
+    <div class="species-heading">
+      <span class="species-label">PENGUIN FIELD NOTES — ATLAS</span>
+      <h1>Les espèces de pingouins</h1>
+      <p>
+        Explorez les caractéristiques des différentes espèces
+        à travers leurs données et leurs graphiques.
+      </p>
+    </div>
+
+    <div class="species-grid">
+      {speciesList.map((species, index) => (
+        <a
+          href={`/penguins/specie/${species.toLowerCase()}`}
+          class="species-card"
+          style={`--card-bg:${colors[index % colors.length].bg}; --card-accent:${colors[index % colors.length].accent}; --card-border:${colors[index % colors.length].border};`}
+        >
+          <span class="card-number">
+            ESPÈCE 0{index + 1}
+          </span>
+
+          <div class="card-content">
+            <h2>{species}</h2>
+            <p>
+              Découvrez les mesures et les caractéristiques
+              de cette espèce.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <span>Explorer les données</span>
+            <span class="arrow">↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .species-page {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 90px 35px 120px;
+  }
+
+  .species-heading {
+    max-width: 750px;
+    margin-bottom: 65px;
+  }
+
+  .species-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #7c3aed;
+  }
+
+  .species-heading h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 1.1;
+    font-weight: 400;
+    color: #29223d;
+    margin: 22px 0;
+  }
+
+  .species-heading p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #777084;
+    max-width: 530px;
+  }
+
+  .species-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .species-card {
+    min-height: 330px;
+    padding: 30px;
+    border-radius: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .species-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 35px rgba(41, 34, 61, 0.08);
+  }
+
+  .card-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--card-accent);
+  }
+
+  .card-content h2 {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    font-weight: 400;
+    color: #29223d;
+    margin-bottom: 15px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #777084;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--card-accent);
+  }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+    font-size: 22px;
+    transition: transform 0.3s ease;
+  }
+
+  .species-card:hover .arrow {
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 850px) {
+    .species-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .species-card {
+      min-height: 260px;
+    }
+
+    .species-page {
+      padding: 50px 20px 80px;
+    }
+  }
+</style>

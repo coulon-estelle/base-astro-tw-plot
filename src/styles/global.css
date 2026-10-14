@@ -333,3 +333,100 @@ a {
 		width: 100%;
 	}
 }
+
+/* Pages de détail : espèces et îles */
+
+.detail-page {
+  width: min(100% - 3rem, 1050px);
+  margin: 0 auto;
+  padding: 65px 0 100px;
+}
+
+.detail-page .back-link {
+  display: inline-block;
+  margin-bottom: 45px;
+  color: #7c3aed;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.detail-page .back-link:hover {
+  text-decoration: underline;
+}
+
+.detail-page .detail-header {
+  margin-bottom: 40px;
+}
+
+.detail-page .detail-header h1 {
+  margin: 0 0 14px;
+  color: #29243d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.detail-page .detail-header p {
+  margin: 0;
+  color: #706982;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.detail-page .graph-card {
+  padding: 35px;
+  background: #fff;
+  border: 1px solid rgba(76, 64, 104, 0.14);
+  border-radius: 22px;
+  box-shadow: 0 12px 35px rgba(78, 61, 112, 0.05);
+}
+
+.detail-page .graph-card h2 {
+  margin: 0 0 25px;
+  color: #29243d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.detail-page .graph {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.detail-page .graph .plot-frame {
+  width: fit-content;
+  max-width: 100%;
+  border: 0;
+  background: transparent;
+}
+
+.detail-page .graph svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .detail-page {
+    width: min(100% - 2rem, 1050px);
+    padding: 35px 0 70px;
+  }
+
+  .detail-page .back-link {
+    margin-bottom: 30px;
+  }
+
+  .detail-page .graph-card {
+    padding: 20px;
+  }
+
+  .detail-page .graph {
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,122 @@
+
+---
+import Layout from "../../../layouts/Layout.astro";
+import penguins from "../../../assets/penguins.json";
+
+const sexes = [...new Set(
+  penguins.map((penguin) => penguin.sex).filter((sex) => sex != null)
+)];
+
+const colors = [
+  { bg: "#fff1f2", accent: "#be123c", border: "#fecdd3" },
+  { bg: "#f5f3ff", accent: "#7c3aed", border: "#ddd6fe" }
+];
+---
+
+<Layout title="Sexes | Penguin Field Notes">
+  <main class="sex-page">
+    <header class="sex-heading">
+      <h1>Sexe des pingouins</h1>
+      <p>Répartition des individus selon leur sexe.</p>
+    </header>
+
+    <div class="sex-grid">
+      {sexes.map((sex, index) => (
+        <a
+          href={`/penguins/sex/${sex.toLowerCase()}`}
+          class="sex-card"
+          style={`--card-bg:${colors[index % colors.length].bg}; --card-accent:${colors[index % colors.length].accent}; --card-border:${colors[index % colors.length].border};`}
+        >
+          <span class="card-number">0{index + 1}</span>
+
+          <h2>{sex === "MALE" ? "Mâles" : "Femelles"}</h2>
+
+          <div class="card-footer">
+            <span>Voir les données</span>
+            <span>↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .sex-page {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 70px 30px 100px;
+  }
+
+  .sex-heading {
+    margin-bottom: 45px;
+  }
+
+  .sex-heading h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 400;
+    color: #29243d;
+    margin: 0 0 15px;
+  }
+
+  .sex-heading p {
+    color: #706982;
+    font-size: 15px;
+  }
+
+  .sex-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .sex-card {
+    min-height: 240px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 22px;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .sex-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-number {
+    color: var(--card-accent);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .sex-card h2 {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: #29243d;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 1px solid var(--card-border);
+    color: var(--card-accent);
+    font-size: 14px;
+  }
+
+  @media (max-width: 700px) {
+    .sex-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sex-page {
+      padding: 40px 20px 70px;
+    }
+  }
+</style>

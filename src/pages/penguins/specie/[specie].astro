@@ -1,0 +1,233 @@
+---
+export const prerender = true;
+
+import Layout from "../../../layouts/Layout.astro";
+import PlotFigure from "../../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../../../assets/penguins.json";
+
+export function getStaticPaths() {
+  const speciesList = [...new Set(penguins.map((p) => p.species))];
+
+  return speciesList.map((species) => ({
+    params: { specie: species.toLowerCase() }
+  }));
+}
+
+const { specie } = Astro.params;
+
+const filteredPenguins = penguins.filter(
+  (p) => p.species.toLowerCase() === specie
+);
+
+const speciesName = [...new Set(penguins.map((p) => p.species))]
+  .find((name) => name.toLowerCase() === specie) ?? specie;
+
+const islandCount = new Set(filteredPenguins.map((p) => p.island)).size;
+
+const masses = filteredPenguins
+  .map((p) => p.body_mass_g)
+  .filter((mass): mass is number => mass !== null);
+
+const averageMass = masses.length
+  ? Math.round(masses.reduce((sum, mass) => sum + mass, 0) / masses.length)
+  : 0;
+
+const validPenguins = filteredPenguins.filter(
+  (p) => p.culmen_length_mm !== null && p.culmen_depth_mm !== null
+);
+
+const colors: Record<string, string> = {
+  adelie: "#e11d48",
+  chinstrap: "#7c3aed",
+  gentoo: "#0891b2"
+};
+
+const color = colors[specie ?? ""] ?? "#7c3aed";
+---
+
+
+<Layout title={`${speciesName} | Penguin Field Notes`}>
+  <main class="detail-page">
+    <a href="/penguins/specie" class="back-link">
+      ← Espèces
+    </a>
+
+    <header class="detail-header">
+      <h1>{speciesName}</h1>
+      <p>
+        {filteredPenguins.length} pingouins · {islandCount} îles ·
+        {averageMass.toLocaleString("fr-FR")} g en moyenne
+      </p>
+    </header>
+
+    <section class="graph-card">
+      <h2>Mensurations</h2>
+
+      <div class="graph">
+        <PlotFigure
+          options={{
+            width: 760,
+            height: 430,
+            marginLeft: 75,
+            marginBottom: 60,
+            style: { background: "transparent" },
+            x: { label: "Longueur du culmen (mm)", grid: true },
+            y: { label: "Profondeur du culmen (mm)", grid: true },
+            marks: [
+              Plot.dot(validPenguins, {
+                x: "culmen_length_mm",
+                y: "culmen_depth_mm",
+                fill: color,
+                r: 4,
+                fillOpacity: 0.8
+              })
+            ]
+          }}
+        />
+      </div>
+    </section>
+  </main>
+</Layout>
+
+
+<style>
+  .species-detail {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 65px 30px 110px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 45px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7c3aed;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .detail-heading {
+    margin-bottom: 45px;
+  }
+
+  .eyebrow-detail,
+  .chart-label {
+    color: #7c3aed;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .detail-heading h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: #29223d;
+    margin: 15px 0 20px;
+  }
+
+  .detail-heading p {
+    max-width: 580px;
+    color: #777084;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 35px;
+  }
+
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e9e3f4;
+    border-radius: 20px;
+    padding: 25px;
+  }
+
+  .stat-card span {
+    color: #9389a4;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+
+  .stat-card strong {
+    display: block;
+    margin: 14px 0 5px;
+    font-family: Georgia, serif;
+    font-size: 35px;
+    font-weight: 400;
+    color: #29223d;
+  }
+
+  .stat-card p {
+    color: #9389a4;
+    font-size: 12px;
+  }
+
+  .chart-card {
+    background: #fff;
+    border: 1px solid #e9e3f4;
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 12px 40px rgba(41, 34, 61, 0.04);
+  }
+
+  .chart-heading {
+    margin-bottom: 35px;
+  }
+
+  .chart-heading h2 {
+    font-family: Georgia, serif;
+    font-size: 27px;
+    font-weight: 400;
+    color: #29223d;
+    margin: 10px 0;
+  }
+
+  .chart-heading p {
+    font-size: 13px;
+    color: #9389a4;
+    line-height: 1.7;
+  }
+
+  .chart-container {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .chart-container :global(svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .species-detail {
+      padding: 35px 20px 70px;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-card {
+      padding: 20px;
+    }
+
+    .chart-container {
+      justify-content: flex-start;
+    }
+  }
+</style>

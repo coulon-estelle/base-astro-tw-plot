@@ -1,0 +1,107 @@
+---
+export const prerender = true;
+
+import Layout from "../../../layouts/Layout.astro";
+import PlotFigure from "../../../components/PlotFigure.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../../../assets/penguins.json";
+
+export function getStaticPaths() {
+  const sexes = [...new Set(
+    penguins.map((penguin) => penguin.sex).filter((sex) => sex != null)
+  )];
+
+  return sexes.map((sex) => ({
+    params: { sex: sex.toLowerCase() }
+  }));
+}
+
+const { sex } = Astro.params;
+
+const filteredPenguins = penguins.filter(
+  (penguin) => penguin.sex?.toLowerCase() === sex
+);
+
+const sexName = sex === "male" ? "Mâles" : "Femelles";
+
+const speciesCount = new Set(
+  filteredPenguins.map((penguin) => penguin.species)
+).size;
+
+const masses = filteredPenguins
+  .map((penguin) => penguin.body_mass_g)
+  .filter((mass): mass is number => mass !== null);
+
+const averageMass = masses.length
+  ? Math.round(masses.reduce((sum, mass) => sum + mass, 0) / masses.length)
+  : 0;
+
+const validPenguins = filteredPenguins.filter(
+  (penguin) =>
+    penguin.culmen_length_mm !== null &&
+    penguin.culmen_depth_mm !== null
+);
+---
+
+<Layout title={`${sexName} | Penguin Field Notes`}>
+  <main class="detail-page">
+    <a href="/penguins/sex" class="back-link">
+      ← Sexes
+    </a>
+
+    <header class="detail-header">
+      <h1>{sexName}</h1>
+      <p>
+        {filteredPenguins.length} pingouins ·
+        {speciesCount} espèces ·
+        {averageMass.toLocaleString("fr-FR")} g en moyenne
+      </p>
+    </header>
+
+    <section class="graph-card">
+      <h2>Mensurations</h2>
+
+      <div class="graph">
+        <PlotFigure
+          
+options={{
+  width: 760,
+  height: 430,
+  marginTop: 30,
+  marginRight: 30,
+  marginBottom: 60,
+  marginLeft: 75,
+  style: {
+    background: "transparent",
+    fontSize: "12px"
+  },
+  x: {
+    label: "Longueur du culmen (mm)",
+    grid: true
+  },
+  y: {
+    label: "Profondeur du culmen (mm)",
+    grid: true
+  },
+  color: {
+    legend: false,
+    domain: ["Adelie", "Chinstrap", "Gentoo"],
+    range: ["#e11d48", "#7c3aed", "#0891b2"]
+  },
+  marks: [
+    Plot.dot(validPenguins, {
+      x: "culmen_length_mm",
+      y: "culmen_depth_mm",
+      fill: "species",
+      r: 4,
+      fillOpacity: 0.8
+    })
+  ]
+}}
+
+            ]
+        />
+      </div>
+    </section>
+  </main>
+</Layout>
